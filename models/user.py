@@ -4,6 +4,8 @@ from models.base_model import Base
 from models.base_model import BaseModel
 from sqlalchemy import Column
 from sqlalchemy import String
+from os import getenv
+from sqlalchemy import Integer
 from sqlalchemy.orm import relationship
 
 
