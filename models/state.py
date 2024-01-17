@@ -7,8 +7,9 @@ from sqlalchemy import String
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from models.city import City
-from os import getenv
 from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
+import shlex
 
 class State(BaseModel):
     """ State class """

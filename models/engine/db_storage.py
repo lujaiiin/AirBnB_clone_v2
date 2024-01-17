@@ -3,6 +3,7 @@
 import models
 from models.amenity import Amenity
 from models.base_model import BaseModel, Base
+from sqlalchemy.ext.declarative import declarative_base
 from models.city import City
 from models.place import Place
 from models.review import Review
