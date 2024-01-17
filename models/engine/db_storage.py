@@ -1,70 +1,83 @@
 #!/usr/bin/python3
-"""This module defines a class to manage DBstorage for hbnb clone"""
-import models
-from models.amenity import Amenity
-from models.base_model import BaseModel, Base
+"""This is the base model class for AirBnB"""
 from sqlalchemy.ext.declarative import declarative_base
-from models.city import City
-from models.place import Place
-from models.review import Review
-from models.state import State
-from models.user import User
-from os import getenv
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
+import uuid
+import models
+from datetime import datetime
+from sqlalchemy import Column, Integer, String, DateTime
 
 
-models = {"User": User, "State": State, "City": City,
-          "Amenity": Amenity, "Place": Place, "Review": Review}
+Base = declarative_base()
 
 
-class DBStorage:
-    """This class manages dbstorage of hbnb models in JSON format"""
-    __engine = None
-    __session = None
+class BaseModel:
+    """This class will defines all common attributes/methods
+    for other classes
+    """
+    id = Column(String(60), unique=True, nullable=False, primary_key=True)
+    created_at = Column(DateTime, nullable=False, default=(datetime.utcnow()))
+    updated_at = Column(DateTime, nullable=False, default=(datetime.utcnow()))
 
-    def __init__(self):
-        """ init dbstorage"""
-        USER = getenv('HBNB_MYSQL_USER')
-        PWD = getenv('HBNB_MYSQL_PWD')
-        HOST = getenv('HBNB_MYSQL_HOST')
-        DB = getenv('HBNB_MYSQL_DB')
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
-                                      format(USER, PWD, HOST, DB),
-                                      pool_pre_ping=True)
-
-        if getenv('HBNB_ENV') == "test":
-            Base.metadata.drop_all(self.__engine)
-
-    def all(self, cls=None):
-        ''' query on the current database session '''
-        objs = {}
-        if cls is not None:
-            for obj in self.__session.query(models[cls]):
-                objs[obj.__class__.__name__ + '.' + obj.id] = obj
+    def __init__(self, *args, **kwargs):
+        """Instantiation of base model class
+        Args:
+            args: it won't be used
+            kwargs: arguments for the constructor of the BaseModel
+        Attributes:
+            id: unique id generated
+            created_at: creation date
+            updated_at: updated date
+        """
+        if kwargs:
+            for key, value in kwargs.items():
+                if key == "created_at" or key == "updated_at":
+                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                if key != "__class__":
+                    setattr(self, key, value)
+            if "id" not in kwargs:
+                self.id = str(uuid.uuid4())
+            if "created_at" not in kwargs:
+                self.created_at = datetime.now()
+            if "updated_at" not in kwargs:
+                self.updated_at = datetime.now()
         else:
-            for model in models:
-                for obj in self.__session.query(models[model]):
-                    objs[obj.__class__.__name__ + '.' + obj.id] = obj
-        return objs
+            self.id = str(uuid.uuid4())
+            self.created_at = self.updated_at = datetime.now()
 
-    def new(self, obj):
-        ''' add the object to the current database session '''
-        self.__session.add(obj)
+    def __str__(self):
+        """returns a string
+        Return:
+            returns a string of class name, id, and dictionary
+        """
+        return "[{}] ({}) {}".format(
+            type(self).__name__, self.id, self.__dict__)
+
+    def __repr__(self):
+        """return a string representaion
+        """
+        return self.__str__()
 
     def save(self):
-        ''' saves or writeto db '''
-        self.__session.commit()
+        """updates the public instance attribute updated_at to current
+        """
+        self.updated_at = datetime.now()
+        models.storage.new(self)
+        models.storage.save()
 
-    def delete(self, obj=None):
-        """ delete from the current database session """
-        if obj is not None:
-            self.__session.delete(obj)
+    def to_dict(self):
+        """creates dictionary of the class  and returns
+        Return:
+            returns a dictionary of all the key values in __dict__
+        """
+        my_dict = dict(self.__dict__)
+        my_dict["__class__"] = str(type(self).__name__)
+        my_dict["created_at"] = self.created_at.isoformat()
+        my_dict["updated_at"] = self.updated_at.isoformat()
+        if '_sa_instance_state' in my_dict.keys():
+            del my_dict['_sa_instance_state']
+        return my_dict
 
-    def reload(self):
-        ''' create all tables in the database '''
-        Base.metadata.create_all(self.__engine)
-        session = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        self.__session = scoped_session(session)
-    def close(self):
-        self.__session.close
+    def delete(self):
+        """ delete object
+        """
+        models.storage.delete(self)
