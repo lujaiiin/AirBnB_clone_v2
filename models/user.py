@@ -8,7 +8,7 @@ from sqlalchemy.orm import relationship
 
 
 class User(BaseModel, Base):
-    """Represents  MySQL database. """
+    """Represents  MySQL database """
     __tablename__ = "users"
     email = Column(String(128), nullable=False)
     password = Column(String(128), nullable=False)
