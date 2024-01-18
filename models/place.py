@@ -43,20 +43,21 @@ class Place(BaseModel, Base):
                                  back_populates="place_amenities")
     else:
         @property
-        def reviews(self):
+       def reviews(self):
             """ Returns list """
-            v = models.storage.all()
-            list = []
-            res = []
-            for key in v:
-                rev = key.replace('.', ' ')
-                rev = shlex.split(rev)
-                if (rev[0] == 'Review'):
-                    list.append(v[key])
-            for el in list:
-                if (el.place_id == self.id):
-                    res.append(el)
-            return (res)
+            var = models.storage.all()
+            lista = []
+            result = []
+            for key in var:
+                review = key.replace('.', ' ')
+                review = shlex.split(review)
+                if (review[0] == 'Review'):
+                    lista.append(var[key])
+            for elem in lista:
+                if (elem.place_id == self.id):
+                    result.append(elem)
+            return (result)
+)
 
         @property
         def amenities(self):
