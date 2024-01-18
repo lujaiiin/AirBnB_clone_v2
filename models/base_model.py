@@ -50,6 +50,6 @@ class BaseModel:
 
     def __str__(self):
         """Return"""
-        a = self.__dict__.copy()
-        a.pop("_sa_instance_state", None)
-        return "[{}] ({}) {}".format(type(self).__name__, self.id, a)
+        p = self.__dict__.copy()
+        p.pop("_sa_instance_state", None)
+        return "[{}] ({}) {}".format(type(self).__name__, self.id, p)
