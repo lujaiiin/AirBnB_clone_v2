@@ -43,7 +43,7 @@ class DBStorage:
             query = self.__session.query(cls)
             for i in query:
                 k = "{}.{}".format(type(i).__name__, i.id)
-                dic[k] = i
+                dict[k] = i
         else:
             lis = [State, City, User, Place, Review, Amenity]
             for clase in lis:
