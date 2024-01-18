@@ -42,6 +42,7 @@ class Place(BaseModel, Base):
                                  viewonly=False,
                                  back_populates="place_amenities")
     else:
+      
         @property
        def reviews(self):
             """ Returns list """
