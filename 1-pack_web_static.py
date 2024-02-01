@@ -7,6 +7,7 @@ import os.path as oo
 
 def do_pack():
     """Create a tar archive"""
+
     date = datetime.utcnow()
     filee = "versions/web_static_{}{}{}{}{}{}.tgz".format(date.year,
                                                          date.month,
@@ -14,7 +15,6 @@ def do_pack():
                                                          date.hour,
                                                          date.minute,
                                                          date.second)
-
     if oo.isdir("versions") is False:
         if local("mkdir -p versions").failed is True:
             return None
