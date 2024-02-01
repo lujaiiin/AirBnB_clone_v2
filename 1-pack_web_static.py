@@ -8,7 +8,7 @@ import os.path as oo
 def do_pack():
     """Create a tar archive"""
     date = datetime.utcnow()
-    filee = "versions/web_static_{}{}{}{}{}{}.tgz".format(dt.year,
+    filee = "versions/web_static_{}{}{}{}{}{}.tgz".format(date.year,
                                                          date.month,
                                                          date.day,
                                                          date.hour,
