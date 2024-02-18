@@ -20,15 +20,14 @@ def hhbnb():
     return 'HBNB'
 
 
-@app.route('/c/<path:text>', defaults={'text': 'is cool'}, strict_slashes=False)
-@app.route('/c/', strict_slashes=False)
+@app.route('/c/<text>', strict_slashes=False)
 def c_text(text):
     """c_text function"""
     text = text.replace('_', ' ')
     return f'C {text}'
 
 
-@app.route('/python/<path:text>', defaults={'text': 'is cool'}, strict_slashes=False)
+@app.route('/python/<text>', defaults={'text': 'is cool'}, strict_slashes=False)
 @app.route('/python/', strict_slashes=False)
 def python_text(text):
     """python_text function"""
