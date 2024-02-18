@@ -20,7 +20,6 @@ class DBStorage:
 
     def __init__(self):
         """init """
-        
         user = getenv("HBNB_MYSQL_USER")
         passwd = getenv("HBNB_MYSQL_PWD")
         db = getenv("HBNB_MYSQL_DB")
@@ -55,23 +54,19 @@ class DBStorage:
 
     def new(self, obj):
         """new fun"""
-        
         self.__session.add(obj)
 
     def save(self):
         """save fun"""
-        
         self.__session.commit()
 
     def delete(self, obj=None):
         """delet fun"""
-        
         if obj:
             self.session.delete(obj)
 
     def reload(self):
         """reload"""
-        
         Base.metadata.create_all(self.__engine)
         secan = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(secan)
@@ -79,5 +74,4 @@ class DBStorage:
 
     def close(self):
         """close fun"""
-        
-        self.__session.close()
+        self.__session.remove()

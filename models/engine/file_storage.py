@@ -10,6 +10,7 @@ import shlex
 from models.user import User
 from models.state import State
 
+
 class FileStorage:
     """This class manages storage of hbnb models in JSON format"""
     __file_path = 'file.json'
@@ -57,6 +58,7 @@ class FileStorage:
             temp = {}
             with open(FileStorage.__file_path, 'r') as f:
                 temp = json.load(f)
+
                 for key, val in temp.items():
                     self.all()[key] = classes[val['__class__']](**val)
         except FileNotFoundError:
@@ -64,12 +66,10 @@ class FileStorage:
 
     def delete(self, obj=None):
         """delet fun"""
-        
         if obj:
             k = "{}.{}".format(type(obj).__name__, obj.id)
             del self.__objects[k]
 
     def close(self):
         """close fun"""
-        
         self.reload()
