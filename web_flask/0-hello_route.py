@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """Modules"""
-from flask import Flask
 
+from flask import Flask
 
 app = Flask(__name__)
 
@@ -9,7 +9,6 @@ app = Flask(__name__)
 @app.route('/airbnb-onepage/', strict_slashes=False)
 def hello_hbnb():
     """hello functin"""
-
     return 'Hello HBNB!'
 
 
